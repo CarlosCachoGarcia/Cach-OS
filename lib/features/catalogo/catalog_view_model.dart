@@ -5,9 +5,13 @@ import '../../repositories/product_repository.dart';
 class CatalogViewModel extends BaseViewModel {
   final ProductRepository repository;
   List<Product> products = [];
+  List<String> categories = [];
+  String? category;
   CatalogViewModel(this.repository);
-  Future<bool> load() => run(() async {
+  Future<bool> load([String? selected]) => run(() async {
+        category = selected;
         products = [];
-        products = await repository.list();
+        categories = await repository.categories();
+        products = await repository.list(selected);
       });
 }
