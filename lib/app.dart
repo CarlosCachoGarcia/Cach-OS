@@ -8,6 +8,7 @@ import 'features/catalogo/catalog_screen.dart';
 import 'features/catalogo/detail_screen.dart';
 import 'features/inventario/product_form_screen.dart';
 import 'features/compras/cart_screen.dart';
+import 'features/auditorias/users_screen.dart';
 
 class StoreApp extends StatelessWidget {
   final Dependencies deps;
@@ -51,6 +52,7 @@ class StoreApp extends StatelessWidget {
               );
             }
             if (name == '/cart' && s.canShop) screen = CartScreen(deps);
+            if (name == '/users' && s.canAudit) screen = UsersScreen(deps);
           }
           return MaterialPageRoute(builder: (_) => screen, settings: settings);
         },

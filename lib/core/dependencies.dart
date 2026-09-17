@@ -7,6 +7,7 @@ import 'session_storage.dart';
 import '../repositories/auth_repository.dart';
 import '../repositories/product_repository.dart';
 import '../repositories/cart_repository.dart';
+import '../repositories/audit_repository.dart';
 import '../features/autenticacion/auth_view_model.dart';
 import '../features/compras/cart_view_model.dart';
 
@@ -16,6 +17,7 @@ class Dependencies {
   final ApiClient api;
   final SessionStorage storage;
   late final products = ProductRepository(api, session);
+  late final audit = AuditRepository(api, session);
   late final auth = AuthViewModel(AuthRepository(api, storage, session));
   late final cart = CartViewModel(CartRepository(api, session));
   Dependencies({ApiClient? api, SessionStorage? storage})
