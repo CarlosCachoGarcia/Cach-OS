@@ -99,6 +99,14 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       Navigator.pushNamed(context, '/users');
                     },
                   ),
+                  ListTile(
+                    leading: const Icon(Icons.history),
+                    title: const Text('Histórico de carritos'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/history');
+                    },
+                  ),
                 ],
                 const Divider(),
                 ListenableBuilder(
