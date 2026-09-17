@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'core/dependencies.dart';
+import 'models/product.dart';
 import 'features/autenticacion/login_screen.dart';
 import 'features/autenticacion/session_screen.dart';
 import 'features/catalogo/catalog_screen.dart';
@@ -39,6 +40,14 @@ class StoreApp extends StatelessWidget {
             }
             if (name == '/product/new' && s.canManage) {
               screen = ProductFormScreen(deps);
+            }
+            if (name == '/product/edit' &&
+                s.canManage &&
+                settings.arguments is Product) {
+              screen = ProductFormScreen(
+                deps,
+                product: settings.arguments as Product,
+              );
             }
           }
           return MaterialPageRoute(builder: (_) => screen, settings: settings);

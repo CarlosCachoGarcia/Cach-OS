@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/dependencies.dart';
+import '../../models/product.dart';
 import '../../widgets/common.dart';
 import 'detail_view_model.dart';
 
@@ -31,6 +32,15 @@ class _DetailScreenState extends State<DetailScreen> {
   void dispose() {
     vm.dispose();
     super.dispose();
+  }
+
+  Future<void> edit() async {
+    final result = await Navigator.pushNamed(
+      context,
+      '/product/edit',
+      arguments: vm.product,
+    );
+    if (mounted && result is Product) vm.replace(result);
   }
 
   @override
@@ -67,6 +77,17 @@ class _DetailScreenState extends State<DetailScreen> {
                           const SizedBox(height: 20),
                           Text(p.description),
                           const SizedBox(height: 28),
+                          if (widget.deps.session.canManage)
+                            Wrap(
+                              spacing: 12,
+                              children: [
+                                FilledButton.icon(
+                                  onPressed: edit,
+                                  icon: const Icon(Icons.edit_outlined),
+                                  label: const Text('Editar'),
+                                ),
+                              ],
+                            ),
                         ],
                       ),
                     ),
