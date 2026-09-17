@@ -136,7 +136,11 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                     return Card(
                                       clipBehavior: Clip.antiAlias,
                                       child: InkWell(
-                                        onTap: null,
+                                        onTap: () => Navigator.pushNamed(
+                                          context,
+                                          '/detail',
+                                          arguments: p.id,
+                                        ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(16),
                                           child: Column(

@@ -21,4 +21,9 @@ class ProductRepository {
     return (await api.request('GET', '/products/categories') as List)
         .cast<String>();
   }
+
+  Future<Product> detail(int id) async {
+    session.require(true);
+    return Product.fromJson(await api.request('GET', '/products/$id'));
+  }
 }
