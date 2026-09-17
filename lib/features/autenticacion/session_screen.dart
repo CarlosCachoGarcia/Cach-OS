@@ -27,6 +27,12 @@ class _SessionScreenState extends State<SessionScreen> {
     );
   }
 
+  Future<void> forget() async {
+    final ok = await widget.deps.auth.logout();
+    if (!mounted || !ok) return;
+    Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
+  }
+
   @override
   Widget build(BuildContext context) => ListenableBuilder(
         listenable: widget.deps.auth,
@@ -38,6 +44,10 @@ class _SessionScreenState extends State<SessionScreen> {
                   children: [
                     Flexible(
                         child: ErrorPanel(widget.deps.auth.error!, restore)),
+                    TextButton(
+                      onPressed: forget,
+                      child: const Text('Borrar sesión guardada e ir al login'),
+                    ),
                   ],
                 ),
         ),
