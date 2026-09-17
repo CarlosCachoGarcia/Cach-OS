@@ -60,6 +60,15 @@ class _CatalogScreenState extends State<CatalogScreen> {
                   title: const Text('Catálogo'),
                   onTap: () => Navigator.pop(context),
                 ),
+                if (s.canManage)
+                  ListTile(
+                    leading: const Icon(Icons.add_box_outlined),
+                    title: const Text('Nuevo producto'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/product/new');
+                    },
+                  ),
                 const Divider(),
                 ListenableBuilder(
                   listenable: widget.deps.auth,
@@ -74,6 +83,13 @@ class _CatalogScreenState extends State<CatalogScreen> {
             ),
           ),
         ),
+        floatingActionButton: s.canManage
+            ? FloatingActionButton.extended(
+                onPressed: () => Navigator.pushNamed(context, '/product/new'),
+                icon: const Icon(Icons.add),
+                label: const Text('Nuevo producto'),
+              )
+            : null,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
