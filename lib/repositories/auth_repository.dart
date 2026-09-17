@@ -44,4 +44,9 @@ class AuthRepository {
     final user = AppUser.fromJson(await api.request('GET', '/users/$id'));
     session.start(user, token);
   }
+
+  Future<void> logout() async {
+    await storage.clear();
+    session.clear();
+  }
 }

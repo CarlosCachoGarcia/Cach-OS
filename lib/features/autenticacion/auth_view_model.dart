@@ -7,4 +7,5 @@ class AuthViewModel extends BaseViewModel {
   Future<bool> login(String username, String password) =>
       run(() => repository.login(username, password));
   Future<bool> restore() => run(repository.restore);
+  Future<bool> logout() => run(repository.logout);
 }
