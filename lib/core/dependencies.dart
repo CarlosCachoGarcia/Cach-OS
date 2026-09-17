@@ -5,6 +5,7 @@ import 'api_client.dart';
 import 'session.dart';
 import 'session_storage.dart';
 import '../repositories/auth_repository.dart';
+import '../repositories/product_repository.dart';
 import '../features/autenticacion/auth_view_model.dart';
 
 // Inyección manual: se construyen los objetos una vez y se pasan por constructor.
@@ -12,6 +13,7 @@ class Dependencies {
   final Session session = Session();
   final ApiClient api;
   final SessionStorage storage;
+  late final products = ProductRepository(api, session);
   late final auth = AuthViewModel(AuthRepository(api, storage, session));
   Dependencies({ApiClient? api, SessionStorage? storage})
       : api = api ?? HttpApiClient(http.Client()),
