@@ -9,6 +9,7 @@ import 'features/catalogo/detail_screen.dart';
 import 'features/inventario/product_form_screen.dart';
 import 'features/compras/cart_screen.dart';
 import 'features/auditorias/users_screen.dart';
+import 'features/auditorias/history_screen.dart';
 
 class StoreApp extends StatelessWidget {
   final Dependencies deps;
@@ -53,6 +54,7 @@ class StoreApp extends StatelessWidget {
             }
             if (name == '/cart' && s.canShop) screen = CartScreen(deps);
             if (name == '/users' && s.canAudit) screen = UsersScreen(deps);
+            if (name == '/history' && s.canAudit) screen = HistoryScreen(deps);
           }
           return MaterialPageRoute(builder: (_) => screen, settings: settings);
         },
