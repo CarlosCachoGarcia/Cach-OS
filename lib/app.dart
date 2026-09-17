@@ -7,6 +7,7 @@ import 'features/autenticacion/session_screen.dart';
 import 'features/catalogo/catalog_screen.dart';
 import 'features/catalogo/detail_screen.dart';
 import 'features/inventario/product_form_screen.dart';
+import 'features/compras/cart_screen.dart';
 
 class StoreApp extends StatelessWidget {
   final Dependencies deps;
@@ -49,6 +50,7 @@ class StoreApp extends StatelessWidget {
                 product: settings.arguments as Product,
               );
             }
+            if (name == '/cart' && s.canShop) screen = CartScreen(deps);
           }
           return MaterialPageRoute(builder: (_) => screen, settings: settings);
         },

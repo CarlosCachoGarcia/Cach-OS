@@ -12,6 +12,16 @@ class CartRepository {
     return (result['id'] as num).toInt();
   }
 
+  Future<void> update(int id, List<CartLine> lines) async {
+    session.require(session.canShop);
+    await api.request('PUT', '/carts/$id', _body(lines));
+  }
+
+  Future<void> delete(int id) async {
+    session.require(session.canShop);
+    await api.request('DELETE', '/carts/$id');
+  }
+
   Map<String, dynamic> _body(List<CartLine> lines) => {
         'userId': session.user!.id,
         'date': DateTime.now().toUtc().toIso8601String(),

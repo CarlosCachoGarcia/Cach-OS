@@ -45,6 +45,17 @@ class _CatalogScreenState extends State<CatalogScreen> {
       builder: (context, _) => Scaffold(
         appBar: AppBar(
           title: const Text('Tienda Aula'),
+          actions: [
+            if (s.canShop)
+              ListenableBuilder(
+                listenable: widget.deps.cart,
+                builder: (_, child) => TextButton.icon(
+                  onPressed: () => Navigator.pushNamed(context, '/cart'),
+                  icon: const Icon(Icons.shopping_cart_outlined),
+                  label: Text('${widget.deps.cart.count}'),
+                ),
+              ),
+          ],
         ),
         drawer: Drawer(
           child: SafeArea(
@@ -68,6 +79,15 @@ class _CatalogScreenState extends State<CatalogScreen> {
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pushNamed(context, '/product/new');
+                    },
+                  ),
+                if (s.canShop)
+                  ListTile(
+                    leading: const Icon(Icons.shopping_cart_outlined),
+                    title: const Text('Mi carrito'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/cart');
                     },
                   ),
                 const Divider(),
