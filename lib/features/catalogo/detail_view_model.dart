@@ -9,6 +9,7 @@ class DetailViewModel extends BaseViewModel {
   Future<bool> load(int id) => run(() async {
         product = await repository.detail(id);
       });
+  Future<bool> delete() => run(() => repository.delete(product!.id));
   void replace(Product value) {
     product = value;
     notifyListeners();

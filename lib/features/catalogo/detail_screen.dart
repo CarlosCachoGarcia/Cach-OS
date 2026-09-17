@@ -43,6 +43,35 @@ class _DetailScreenState extends State<DetailScreen> {
     if (mounted && result is Product) vm.replace(result);
   }
 
+  Future<void> remove() async {
+    final yes = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Eliminar producto'),
+        content: const Text('¿Estás seguro de eliminar este producto?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Eliminar'),
+          ),
+        ],
+      ),
+    );
+    if (yes != true || !mounted) return;
+    final ok = await vm.delete();
+    if (!mounted) return;
+    message(
+      context,
+      ok ? 'Producto eliminado (Simulación)' : vm.error!,
+      error: !ok,
+    );
+    if (ok) Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) => ListenableBuilder(
         listenable: vm,
@@ -85,6 +114,11 @@ class _DetailScreenState extends State<DetailScreen> {
                                   onPressed: edit,
                                   icon: const Icon(Icons.edit_outlined),
                                   label: const Text('Editar'),
+                                ),
+                                OutlinedButton.icon(
+                                  onPressed: remove,
+                                  icon: const Icon(Icons.delete_outline),
+                                  label: const Text('Eliminar'),
                                 ),
                               ],
                             ),
