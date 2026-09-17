@@ -90,6 +90,16 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       Navigator.pushNamed(context, '/cart');
                     },
                   ),
+                if (s.canAudit) ...[
+                  ListTile(
+                    leading: const Icon(Icons.people_outline),
+                    title: const Text('Usuarios'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/users');
+                    },
+                  ),
+                ],
                 const Divider(),
                 ListenableBuilder(
                   listenable: widget.deps.auth,
