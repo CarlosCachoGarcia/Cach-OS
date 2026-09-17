@@ -1,31 +1,158 @@
 import 'package:flutter/material.dart';
+
 import '../../core/dependencies.dart';
 import '../../models/app_user.dart';
 import '../../widgets/common.dart';
+import 'catalog_view_model.dart';
 
-class CatalogScreen extends StatelessWidget {
+class CatalogScreen extends StatefulWidget {
   final Dependencies deps;
   const CatalogScreen(this.deps, {super.key});
   @override
-  Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(
-        title: const Text('Tienda Aula'),
-        actions: [
-          TextButton(
-              onPressed: () async {
-                final ok = await deps.auth.logout();
-                if (!context.mounted) return;
-                if (ok) {
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, '/login', (_) => false);
-                } else {
-                  message(context, deps.auth.error!, error: true);
-                }
-              },
-              child: const Text('Cerrar sesión'))
-        ],
+  State<CatalogScreen> createState() => _CatalogScreenState();
+}
+
+class _CatalogScreenState extends State<CatalogScreen> {
+  late final vm = CatalogViewModel(widget.deps.products);
+  @override
+  void initState() {
+    super.initState();
+    vm.load();
+  }
+
+  @override
+  void dispose() {
+    vm.dispose();
+    super.dispose();
+  }
+
+  Future<void> logout() async {
+    final ok = await widget.deps.auth.logout();
+    if (!mounted) return;
+    if (!ok) {
+      message(context, widget.deps.auth.error!, error: true);
+      return;
+    }
+    Navigator.of(context).pushNamedAndRemoveUntil('/login', (_) => false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final s = widget.deps.session;
+    return ListenableBuilder(
+      listenable: vm,
+      builder: (context, _) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Tienda Aula'),
+        ),
+        drawer: Drawer(
+          child: SafeArea(
+            child: ListView(
+              children: [
+                ListTile(
+                  title: Text(s.user?.fullName ?? ''),
+                  subtitle: Text(s.role?.label ?? ''),
+                  leading: const CircleAvatar(child: Icon(Icons.person)),
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.storefront),
+                  title: const Text('Catálogo'),
+                  onTap: () => Navigator.pop(context),
+                ),
+                const Divider(),
+                ListenableBuilder(
+                  listenable: widget.deps.auth,
+                  builder: (_, child) => ListTile(
+                    enabled: !widget.deps.auth.busy,
+                    leading: const Icon(Icons.logout),
+                    title: const Text('Cerrar sesión'),
+                    onTap: logout,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
+              child: Text(
+                'Explora el catálogo',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+            ),
+            Expanded(
+              child: vm.busy
+                  ? const Center(child: CircularProgressIndicator())
+                  : vm.error != null
+                      ? ErrorPanel(vm.error!, () => vm.load())
+                      : vm.products.isEmpty
+                          ? const Center(
+                              child:
+                                  Text('No hay productos en esta categoría.'),
+                            )
+                          : RefreshIndicator(
+                              onRefresh: () async {
+                                await vm.load();
+                              },
+                              child: LayoutBuilder(
+                                builder: (_, constraints) => GridView.builder(
+                                  padding: const EdgeInsets.all(16),
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: constraints.maxWidth < 420
+                                        ? 1
+                                        : constraints.maxWidth < 750
+                                            ? 2
+                                            : 3,
+                                    mainAxisExtent: 300,
+                                    crossAxisSpacing: 16,
+                                    mainAxisSpacing: 16,
+                                  ),
+                                  itemCount: vm.products.length,
+                                  itemBuilder: (context, i) {
+                                    final p = vm.products[i];
+                                    return Card(
+                                      clipBehavior: Clip.antiAlias,
+                                      child: InkWell(
+                                        onTap: null,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Center(
+                                                  child: ProductImage(p.image)),
+                                              const SizedBox(height: 16),
+                                              Text(
+                                                p.title,
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              const Spacer(),
+                                              Text(
+                                                money(p.price),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleLarge,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+            ),
+          ],
+        ),
       ),
-      body: Center(
-          child: Text(
-              'Sesión de ${deps.session.user?.username} · ${deps.session.role?.label}')));
+    );
+  }
 }
