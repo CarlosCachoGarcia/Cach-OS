@@ -1,2 +1,9 @@
 import 'package:flutter/material.dart';
-void main() => runApp(const MaterialApp(home: Scaffold(body: Center(child: Text('Tienda Aula · Base del Sprint 1')))));
+
+import 'app.dart';
+import 'core/dependencies.dart';
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(StoreApp(Dependencies()));
+}
