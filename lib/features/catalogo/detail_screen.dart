@@ -15,6 +15,7 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
   late final vm = DetailViewModel(widget.deps.products);
+  int quantity = 1;
   @override
   void initState() {
     super.initState();
@@ -121,6 +122,58 @@ class _DetailScreenState extends State<DetailScreen> {
                                   label: const Text('Eliminar'),
                                 ),
                               ],
+                            ),
+                          if (widget.deps.session.canShop)
+                            ListenableBuilder(
+                              listenable: widget.deps.cart,
+                              builder: (_, child) => Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      IconButton(
+                                        onPressed: quantity > 1 &&
+                                                !widget.deps.cart.busy
+                                            ? () => setState(() => quantity--)
+                                            : null,
+                                        icon: const Icon(Icons.remove),
+                                      ),
+                                      Text('$quantity'),
+                                      IconButton(
+                                        onPressed: widget.deps.cart.busy
+                                            ? null
+                                            : () => setState(() => quantity++),
+                                        icon: const Icon(Icons.add),
+                                      ),
+                                    ],
+                                  ),
+                                  FilledButton.icon(
+                                    onPressed: widget.deps.cart.busy
+                                        ? null
+                                        : () async {
+                                            final ok =
+                                                await widget.deps.cart.add(
+                                              p,
+                                              quantity,
+                                            );
+                                            if (!context.mounted) return;
+                                            message(
+                                              context,
+                                              ok
+                                                  ? 'Producto añadido al carrito'
+                                                  : widget.deps.cart.error!,
+                                              error: !ok,
+                                            );
+                                          },
+                                    icon: const Icon(Icons.add_shopping_cart),
+                                    label: Text(
+                                      widget.deps.cart.busy
+                                          ? 'Agregando…'
+                                          : 'Agregar al carrito',
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                         ],
                       ),
