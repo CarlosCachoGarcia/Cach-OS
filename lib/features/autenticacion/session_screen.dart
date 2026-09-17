@@ -30,6 +30,7 @@ class _SessionScreenState extends State<SessionScreen> {
   Future<void> forget() async {
     final ok = await widget.deps.auth.logout();
     if (!mounted || !ok) return;
+    widget.deps.cart.clear();
     Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
   }
 

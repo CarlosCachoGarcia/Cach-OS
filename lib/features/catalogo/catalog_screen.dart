@@ -33,6 +33,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
       message(context, widget.deps.auth.error!, error: true);
       return;
     }
+    widget.deps.cart.clear();
     Navigator.of(context).pushNamedAndRemoveUntil('/login', (_) => false);
   }
 
@@ -73,7 +74,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                 ListenableBuilder(
                   listenable: widget.deps.auth,
                   builder: (_, child) => ListTile(
-                    enabled: !widget.deps.auth.busy,
+                    enabled: !widget.deps.auth.busy && !widget.deps.cart.busy,
                     leading: const Icon(Icons.logout),
                     title: const Text('Cerrar sesión'),
                     onTap: logout,
