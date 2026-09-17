@@ -31,8 +31,8 @@ class ProductRepository {
     session.require(session.canManage);
     return Product.fromJson(
       await api.request(
-        'POST',
-        '/products',
+        creating ? 'POST' : 'PUT',
+        creating ? '/products' : '/products/${p.id}',
         p.toJson(),
       ),
     );
