@@ -37,4 +37,9 @@ class ProductRepository {
       ),
     );
   }
+
+  Future<void> delete(int id) async {
+    session.require(session.canManage);
+    await api.request('DELETE', '/products/$id');
+  }
 }
