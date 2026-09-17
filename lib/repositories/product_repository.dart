@@ -26,4 +26,15 @@ class ProductRepository {
     session.require(true);
     return Product.fromJson(await api.request('GET', '/products/$id'));
   }
+
+  Future<Product> save(Product p, {required bool creating}) async {
+    session.require(session.canManage);
+    return Product.fromJson(
+      await api.request(
+        'POST',
+        '/products',
+        p.toJson(),
+      ),
+    );
+  }
 }
