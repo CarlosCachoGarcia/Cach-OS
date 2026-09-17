@@ -1,17 +1,9 @@
-# fakestore
+# Cach-OS · Tienda Aula
 
-A new Flutter project.
+Integración organizada de la aplicación Flutter final por historias de usuario.
 
-## Getting Started
+Esta reorganización se realiza a partir de una aplicación ya existente. Los commits corresponden a la separación e integración actual de sus funcionalidades, con fecha real y sin atribuir trabajo histórico a otras personas. Se conserva el commit inicial del repositorio.
 
-This project is a starting point for a Flutter application.
+La rama `main` contendrá la versión final. Las ramas por historia muestran incrementos acumulativos: cada una contiene sus dependencias anteriores y el cambio específico de su historia.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Consulta [el flujo de ramas](docs/FLUJO_DE_TRABAJO.md) y [el plan del Sprint 1](docs/SPRINT_1.md).
