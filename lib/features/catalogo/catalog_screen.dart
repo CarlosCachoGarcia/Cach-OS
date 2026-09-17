@@ -84,11 +84,29 @@ class _CatalogScreenState extends State<CatalogScreen> {
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
             ),
+            SizedBox(
+              height: 56,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                children: [
+                  for (final category in <String?>[null, ...vm.categories])
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: ChoiceChip(
+                        label: Text(category ?? 'Ver todos'),
+                        selected: vm.category == category,
+                        onSelected: vm.busy ? null : (_) => vm.load(category),
+                      ),
+                    ),
+                ],
+              ),
+            ),
             Expanded(
               child: vm.busy
                   ? const Center(child: CircularProgressIndicator())
                   : vm.error != null
-                      ? ErrorPanel(vm.error!, () => vm.load())
+                      ? ErrorPanel(vm.error!, () => vm.load(vm.category))
                       : vm.products.isEmpty
                           ? const Center(
                               child:
@@ -96,7 +114,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                             )
                           : RefreshIndicator(
                               onRefresh: () async {
-                                await vm.load();
+                                await vm.load(vm.category);
                               },
                               child: LayoutBuilder(
                                 builder: (_, constraints) => GridView.builder(

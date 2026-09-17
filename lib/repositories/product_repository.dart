@@ -6,10 +6,19 @@ class ProductRepository {
   final ApiClient api;
   final Session session;
   ProductRepository(this.api, this.session);
-  Future<List<Product>> list() async {
+  Future<List<Product>> list([String? category]) async {
     session.require(true);
-    return (await api.request('GET', '/products') as List)
+    final path = category == null
+        ? '/products'
+        : '/products/category/${Uri.encodeComponent(category)}';
+    return (await api.request('GET', path) as List)
         .map((j) => Product.fromJson(j))
         .toList();
+  }
+
+  Future<List<String>> categories() async {
+    session.require(true);
+    return (await api.request('GET', '/products/categories') as List)
+        .cast<String>();
   }
 }
