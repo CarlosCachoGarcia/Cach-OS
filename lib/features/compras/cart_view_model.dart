@@ -27,6 +27,28 @@ class CartViewModel extends BaseViewModel {
         cartId = id;
         _lines = next;
       });
+  Future<bool> change(CartLine line, int quantity) => run(() async {
+        final before = _lines;
+        final next = [
+          for (final item in _lines)
+            if (item.product.id != line.product.id)
+              item
+            else if (quantity > 0)
+              CartLine(item.product, quantity),
+        ];
+        _lines = next;
+        notifyListeners(); // Total inmediato; se revierte si falla la red.
+        try {
+          if (quantity <= 0) {
+            await repository.delete(cartId!);
+          } else {
+            await repository.update(cartId!, next);
+          }
+        } catch (_) {
+          _lines = before;
+          rethrow;
+        }
+      });
   void clear() {
     _lines = [];
     cartId = null;
